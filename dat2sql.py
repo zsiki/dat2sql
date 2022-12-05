@@ -149,24 +149,30 @@ class DatFile():
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        D_F = DatFile(sys.argv[1])
-        D_F.load_table_info()
-        D_F.load_points()
-        print(D_F.point_table.shape)
+    if len(sys.argv) != 2:
+        print(f"Usage: {sys.argv[0]} dat_file")
+        sys.exit(1)
 
-        D_F.load_lines()
-        print(D_F.line_table[0:5,:]) # for test
-        print(D_F.line_table.shape)
+    D_F = DatFile(sys.argv[1])
+    if D_F.dat_file is None:
+        print(f"Cannot open dat file {sys.argv[1]}")
+        sys.exit(2)
+    D_F.load_table_info()
+    D_F.load_points()
+    print(D_F.point_table.shape)
 
-        D_F.load_border_lines()
-        print(D_F.border_line_table[0:5,:])  # for test      
-        print(D_F.border_line_table.shape)        
+    D_F.load_lines()
+    print(D_F.line_table[0:5,:]) # for test
+    print(D_F.line_table.shape)
 
-        D_F.load_borders()
-        print(D_F.border_table[2350:2360,:])  # for test +1 and -1 replacement     
-        print(D_F.border_table.shape)  
+    D_F.load_border_lines()
+    print(D_F.border_line_table[0:5,:])  # for test      
+    print(D_F.border_line_table.shape)        
 
-        D_F.load_surfaces()
-        print(D_F.surface_table[110:116,:])  # for test +1 and -1 replacement     
-        print(D_F.surface_table.shape)  
+    D_F.load_borders()
+    print(D_F.border_table[2350:2360,:])  # for test +1 and -1 replacement     
+    print(D_F.border_table.shape)  
+
+    D_F.load_surfaces()
+    print(D_F.surface_table[110:116,:])  # for test +1 and -1 replacement     
+    print(D_F.surface_table.shape)  
