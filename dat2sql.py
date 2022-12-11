@@ -70,13 +70,15 @@ class DatFile():
         if self.point_table is not None and not force:
             return
         # TODO use structure array with int and float data types
-        point_table = np.zeros((self.table_info['T_PONT'][2], 3), dtype=float)
+        point_table = np.zeros((self.table_info['T_PONT'][2], 3), dtype=int)
         self.dat_file.seek(self.table_info['T_PONT'][0])   # move to start of data
         for i in range(self.table_info['T_PONT'][2]):
             act_line = self.dat_file.readline().strip('*\n\r \t')
             act_buf = act_line.split('*')
+            act_buf[1] = str(int(float(act_buf[1])*100)) # transform y and x to integer multiplied by 100
+            act_buf[2] = str(int(float(act_buf[2])*100))  
             for j in range(3):
-                point_table[i, j] = float(act_buf[j])   # TODO use list comprehension instead of for loop              
+                point_table[i, j] = act_buf[j]   # TODO use list comprehension instead of for loop        
         self.point_table = point_table[point_table[:, 0].argsort()] # sort by id
 
     def load_lines(self, force = False):
@@ -91,8 +93,9 @@ class DatFile():
             act_line = self.dat_file.readline().strip('*\n\r \t')
             act_buf = act_line.split('*')
             for j in range(4):
-                line_table[i, j] = float(act_buf[j])   # TODO use list comprehension instead of for loop              
-        self.line_table = line_table[line_table[:, 0].argsort()] # sort by id
+                line_table[i, j] = act_buf[j]   # TODO use list comprehension instead of for loop              
+        self.line_table = line_table[np.lexsort((line_table[:, 1],line_table[:, 0]))] # sort by id and sub_id
+
 
     def load_border_lines(self, force = False):
         '''load all border lines into memory (numpy array)
@@ -106,8 +109,9 @@ class DatFile():
             act_line = self.dat_file.readline().strip('*\n\r \t')
             act_buf = act_line.split('*')
             for j in range(4):
-                border_line_table[i, j] = float(act_buf[j])   # TODO use list comprehension instead of for loop              
-        self.border_line_table = border_line_table[border_line_table[:, 0].argsort()] # sort by id
+                border_line_table[i, j] = act_buf[j]   # TODO use list comprehension instead of for loop              
+        self.border_line_table = border_line_table[np.lexsort((border_line_table[:, 1],border_line_table[:, 0]))] # sort by id and sub_id
+
 
     def load_borders(self, force = False):
         '''load all borders into memory (numpy array)
@@ -125,8 +129,8 @@ class DatFile():
             act_line = act_line.replace('-', '-1')     #replace '-' character to -1
             act_buf = act_line.split('*')
             for j in range(4):
-                border_table[i, j] = float(act_buf[j])   # TODO use list comprehension instead of for loop              
-        self.border_table = border_table[border_table[:, 0].argsort()] # sort by id
+                border_table[i, j] = act_buf[j]   # TODO use list comprehension instead of for loop              
+        self.border_table = border_table[np.lexsort((border_table[:, 1],border_table[:, 0]))] # sort by id and sub_id
 
     def load_surfaces(self, force = False):
         '''load all surfacess into memory (numpy array)
@@ -144,9 +148,8 @@ class DatFile():
             act_line = act_line.replace('-', '-1')     #replace '-' character to -1
             act_buf = act_line.split('*')
             for j in range(4):
-                surface_table[i, j] = float(act_buf[j])   # TODO use list comprehension instead of for loop              
-        self.surface_table = surface_table[surface_table[:, 0].argsort()] # sort by id
-
+                surface_table[i, j] = act_buf[j]   # TODO use list comprehension instead of for loop              
+        self.surface_table = surface_table[np.lexsort((surface_table[:, 1],surface_table[:, 0]))] # sort by id and sub_id
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -159,10 +162,13 @@ if __name__ == "__main__":
         sys.exit(2)
     D_F.load_table_info()
     D_F.load_points()
+    print('point ids:')
     print(D_F.point_table.shape)
+    print(D_F.point_table[0:10,:])
 
     D_F.load_lines()
-    print(D_F.line_table[0:5,:]) # for test
+    print(D_F.line_table[0:10,:]) # for test
+    #print(D_F.line_table) # for test    TODO: no T_VONAL in the test.dat file
     print(D_F.line_table.shape)
 
     D_F.load_border_lines()
@@ -170,7 +176,7 @@ if __name__ == "__main__":
     print(D_F.border_line_table.shape)        
 
     D_F.load_borders()
-    print(D_F.border_table[2350:2360,:])  # for test +1 and -1 replacement     
+    print(D_F.border_table[2350:2360,:])  # for test +1 and -1 replacement
     print(D_F.border_table.shape)  
 
     D_F.load_surfaces()
