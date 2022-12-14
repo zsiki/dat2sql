@@ -182,6 +182,32 @@ class DatFile():
             return self.point_table[i][1]/100, self.point_table[i][2]/100
 
         return None
+    
+    def get_border_line(self, bid):
+        """Get border line's point coordinates by border line id
+        :param bid: border line id (type: int)
+        """
+        selected_line = self.border_line_table[self.border_line_table[:,0] == bid]
+
+        if selected_line.shape[0] == 0:
+            return None
+
+        selected_points = np.zeros((selected_line.shape[0]+1), dtype=int)
+        selected_points[:-1] = selected_line[:,2]
+        selected_points[-1] = selected_line[-1,3]
+
+        i = np.searchsorted(self.point_table[:,0], selected_points )
+
+        if 0 <= i.all() < self.point_table.shape[0] and self.point_table[i,0].all() == selected_points.all():
+
+            selected_points_crd = list(zip(self.point_table[i,1]/100, self.point_table[i,2]/100))
+
+            return selected_points_crd
+        
+        return None
+
+
+
 
 
 if __name__ == "__main__":
@@ -214,4 +240,6 @@ if __name__ == "__main__":
 
     D_F.load_surfaces()
     print(D_F.surface_table[110:116,:])  # for test +1 and -1 replacement     
-    print(D_F.surface_table.shape)  
+    print(D_F.surface_table.shape)
+
+    print(D_F.get_border_line(2)) # for test
