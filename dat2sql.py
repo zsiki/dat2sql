@@ -34,7 +34,7 @@ class DatFile():
             self.dat_file = open(self.dat_file_name, 'r', encoding=encoding)
         except IOError:
             # handle IO rasied errors
-            print("I/O operation error while reading "+self.dat_file_name)
+            print("I/O operation error while trying to open "+self.dat_file_name)
         except UnicodeEncodeError:
             # Raised when a Unicode-related encoding error occurs
             print("There was an error encrypting "+self.dat_file_name+\
@@ -69,7 +69,7 @@ class DatFile():
         if len(table_info[table_name]) == 1:    # add end and size to last table
             table_info[table_name].append(self.dat_file.tell())
             table_info[table_name].append(num_lines-1)
-        self.table_info = table_info            # emiatt nem tarolok tobb adatot
+        self.table_info = table_info
 
     def load_points(self, force = False):
         """ load all points into memory (numpy array)
@@ -77,9 +77,10 @@ class DatFile():
         """
         if self.point_table is not None and not force:
             return
-        # TODO use structure array with int and float data types
+
         point_table = np.zeros((self.table_info['T_PONT'][2], 3), dtype=int)
         self.dat_file.seek(self.table_info['T_PONT'][0])   # move to start of data
+
         for i in range(self.table_info['T_PONT'][2]):
             act_line = self.dat_file.readline().strip('*\n\r \t')
             act_buf = act_line.split('*')
@@ -89,17 +90,19 @@ class DatFile():
 
     def load_lines(self, force = False):
         '''load all edges into memory (numpy array)
-        :param force: force load even if lines were loaded yet            
+        :param force: force load even if lines have been loaded already
         '''
         if self.line_table is not None and not force:
-            return       
+            return
+
         line_table = np.zeros((self.table_info['T_VONAL'][2], 4), dtype=int)
         self.dat_file.seek(self.table_info['T_VONAL'][0])   # move to start of data
+
         for i in range(self.table_info['T_VONAL'][2]):
             act_line = self.dat_file.readline().strip('*\n\r \t')
             act_buf = act_line.split('*')
-            for j in range(4):
-                line_table[i, j] = int(act_buf[j])   # TODO use list comprehension instead of for loop
+            line_table[i] = [int(act_buf[j]) for j in range(4)]
+
         self.line_table = line_table[np.lexsort((line_table[:,1], line_table[:,0]))] # sort by id
 
     def load_border_lines(self, force = False):
@@ -107,14 +110,16 @@ class DatFile():
         :param force: force load even if lines were loaded yet            
         '''
         if self.border_line_table is not None and not force:
-            return       
+            return
+
         border_line_table = np.zeros((self.table_info['T_HATARVONAL'][2], 4), dtype=int)
         self.dat_file.seek(self.table_info['T_HATARVONAL'][0])   # move to start of data
+
         for i in range(self.table_info['T_HATARVONAL'][2]):
             act_line = self.dat_file.readline().strip('*\n\r \t')
             act_buf = act_line.split('*')
-            for j in range(4):
-                border_line_table[i, j] = int(act_buf[j])   # TODO use list comprehension instead of for loop              
+            border_line_table[i] = [int(act_buf[j]) for j in range(4)]
+
         self.border_line_table = border_line_table[np.lexsort((border_line_table[:, 1],border_line_table[:, 0]))] # sort by id and sub_id
 
 
@@ -125,16 +130,18 @@ class DatFile():
         :param force: force load even if lines were loaded yet            
         '''
         if self.border_table is not None and not force:
-            return       
+            return
+
         border_table = np.zeros((self.table_info['T_HATAR'][2], 4), dtype=int)
         self.dat_file.seek(self.table_info['T_HATAR'][0])   # move to start of data
+
         for i in range(self.table_info['T_HATAR'][2]):
             act_line = self.dat_file.readline().strip('*\n\r \t')
             act_line = act_line.replace('+', '1')      #replace '+' character to 1  
             act_line = act_line.replace('-', '-1')     #replace '-' character to -1
             act_buf = act_line.split('*')
-            for j in range(4):
-                border_table[i, j] = int(act_buf[j])   # TODO use list comprehension instead of for loop              
+            border_table[i] = [int(act_buf[j]) for j in range(4)]
+
         self.border_table = border_table[np.lexsort((border_table[:, 1],border_table[:, 0]))] # sort by id and sub_id
 
     def load_surfaces(self, force = False):
@@ -144,16 +151,18 @@ class DatFile():
         :param force: force load even if lines were loaded yet            
         '''
         if self.surface_table is not None and not force:
-            return       
+            return
+
         surface_table = np.zeros((self.table_info['T_FELULET'][2], 4), dtype=int)
         self.dat_file.seek(self.table_info['T_FELULET'][0])   # move to start of data
+
         for i in range(self.table_info['T_FELULET'][2]):
             act_line = self.dat_file.readline().strip('*\n\r \t')
             act_line = act_line.replace('+', '1')      #replace '+' character to 1  
             act_line = act_line.replace('-', '-1')     #replace '-' character to -1
             act_buf = act_line.split('*')
-            for j in range(4):
-                surface_table[i, j] = int(act_buf[j])   # TODO use list comprehension instead of for loop              
+            surface_table[i] = [int(act_buf[j]) for j in range(4)]
+
         self.surface_table = surface_table[np.lexsort((surface_table[:, 1],surface_table[:, 0]))] # sort by id and sub_id
 
     def get_point(self, pid):
