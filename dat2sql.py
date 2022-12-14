@@ -95,6 +95,12 @@ class DatFile():
         if self.line_table is not None and not force:
             return
 
+        try:
+            self.table_info["T_VONAL"]
+        except KeyError:
+            print("No T_VONAL table in "+self.dat_file_name)
+            return
+
         line_table = np.zeros((self.table_info['T_VONAL'][2], 4), dtype=int)
         self.dat_file.seek(self.table_info['T_VONAL'][0])   # move to start of data
 
@@ -194,9 +200,9 @@ if __name__ == "__main__":
     print(D_F.point_table[0:10,:])
 
     D_F.load_lines()
-    print(D_F.line_table[0:10,:]) # for test
-    #print(D_F.line_table) # for test    TODO: no T_VONAL in the test.dat file
-    print(D_F.line_table.shape)
+    # print(D_F.line_table[0:10,:]) # for test
+    print(D_F.line_table) # for test
+    # print(D_F.line_table.shape)
 
     D_F.load_border_lines()
     print(D_F.border_line_table[0:5,:])  # for test      
