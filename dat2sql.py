@@ -29,11 +29,16 @@ class DatFile():
         """ initialize """
         self.dat_file_name = dat_file_name
 
-        
+        self.dat_file = None
         try:
             self.dat_file = open(self.dat_file_name, 'r', encoding=encoding)
-        except:                                 #TODO uzenet ha nem menne 
-            self.dat_file = None
+        except IOError:
+            # handle IO rasied errors
+            print("I/O operation error while reading "+self.dat_file_name)
+        except UnicodeEncodeError:
+            # Raised when a Unicode-related encoding error occurs
+            print("There was an error encrypting "+self.dat_file_name+\
+                " using "+encoding+" encoding")
 
         # geometry tables
         self.point_table = None
