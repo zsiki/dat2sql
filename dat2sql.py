@@ -42,7 +42,7 @@ class DatFile():
 
     def load_table_info(self):
         """ get table positions and number of lines from dat file """
-        self.dat_file.seek(0)   # rewind file - tell = byte pozi/ seek 
+        self.dat_file.seek(0)   # rewind file - tell = byte pozi/ seek
         table_start = re.compile('T_')
         table_info = {}
         table_name = None
@@ -70,13 +70,13 @@ class DatFile():
         if self.point_table is not None and not force:
             return
         # TODO use structure array with int and float data types
-        point_table = np.zeros((self.table_info['T_PONT'][2], 3), dtype=float)
+        point_table = np.zeros((self.table_info['T_PONT'][2], 3), dtype=int)
         self.dat_file.seek(self.table_info['T_PONT'][0])   # move to start of data
         for i in range(self.table_info['T_PONT'][2]):
             act_line = self.dat_file.readline().strip('*\n\r \t')
             act_buf = act_line.split('*')
-            for j in range(3):
-                point_table[i, j] = float(act_buf[j])   # TODO use list comprehension instead of for loop              
+            point_table[i] = [ int(act_buf[j]) if j == 0 else int(float(act_buf[j])*100) for j in range(3) ]
+
         self.point_table = point_table[point_table[:, 0].argsort()] # sort by id
 
     def load_lines(self, force = False):
@@ -91,8 +91,8 @@ class DatFile():
             act_line = self.dat_file.readline().strip('*\n\r \t')
             act_buf = act_line.split('*')
             for j in range(4):
-                line_table[i, j] = float(act_buf[j])   # TODO use list comprehension instead of for loop              
-        self.line_table = line_table[line_table[:, 0].argsort()] # sort by id
+                line_table[i, j] = int(act_buf[j])   # TODO use list comprehension instead of for loop
+        self.line_table = line_table[np.lexsort((line_table[:,1], line_table[:,0]))] # sort by id
 
     def load_border_lines(self, force = False):
         '''load all border lines into memory (numpy array)
@@ -106,7 +106,7 @@ class DatFile():
             act_line = self.dat_file.readline().strip('*\n\r \t')
             act_buf = act_line.split('*')
             for j in range(4):
-                border_line_table[i, j] = float(act_buf[j])   # TODO use list comprehension instead of for loop              
+                border_line_table[i, j] = int(act_buf[j])   # TODO use list comprehension instead of for loop
         self.border_line_table = border_line_table[border_line_table[:, 0].argsort()] # sort by id
 
     def load_borders(self, force = False):
@@ -125,7 +125,7 @@ class DatFile():
             act_line = act_line.replace('-', '-1')     #replace '-' character to -1
             act_buf = act_line.split('*')
             for j in range(4):
-                border_table[i, j] = float(act_buf[j])   # TODO use list comprehension instead of for loop              
+                border_table[i, j] = int(act_buf[j])   # TODO use list comprehension instead of for loop              
         self.border_table = border_table[border_table[:, 0].argsort()] # sort by id
 
     def load_surfaces(self, force = False):
@@ -144,8 +144,20 @@ class DatFile():
             act_line = act_line.replace('-', '-1')     #replace '-' character to -1
             act_buf = act_line.split('*')
             for j in range(4):
-                surface_table[i, j] = float(act_buf[j])   # TODO use list comprehension instead of for loop              
+                surface_table[i, j] = int(act_buf[j])   # TODO use list comprehension instead of for loop              
         self.surface_table = surface_table[surface_table[:, 0].argsort()] # sort by id
+
+    def get_point(self, pid):
+        """Get point coordinates by point id
+        :param pid: point id in point_table
+        """
+        i = np.searchsorted(self.point_table[:,0], pid )
+
+        if 0 <= i < self.point_table.shape[0] and self.point_table[i,0] == pid:
+
+            return self.point_table[i][1]/100, self.point_table[i][2]/100
+
+        return None
 
 
 if __name__ == "__main__":
