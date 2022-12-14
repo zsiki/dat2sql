@@ -28,10 +28,13 @@ class DatFile():
     def __init__(self, dat_file_name=None, encoding='cp1250'):
         """ initialize """
         self.dat_file_name = dat_file_name
+
+        
         try:
             self.dat_file = open(self.dat_file_name, 'r', encoding=encoding)
         except:                                 #TODO uzenet ha nem menne 
             self.dat_file = None
+
         # geometry tables
         self.point_table = None
         self.line_table = None
@@ -106,8 +109,9 @@ class DatFile():
             act_line = self.dat_file.readline().strip('*\n\r \t')
             act_buf = act_line.split('*')
             for j in range(4):
-                border_line_table[i, j] = int(act_buf[j])   # TODO use list comprehension instead of for loop
-        self.border_line_table = border_line_table[border_line_table[:, 0].argsort()] # sort by id
+                border_line_table[i, j] = int(act_buf[j])   # TODO use list comprehension instead of for loop              
+        self.border_line_table = border_line_table[np.lexsort((border_line_table[:, 1],border_line_table[:, 0]))] # sort by id and sub_id
+
 
     def load_borders(self, force = False):
         '''load all borders into memory (numpy array)
@@ -126,7 +130,7 @@ class DatFile():
             act_buf = act_line.split('*')
             for j in range(4):
                 border_table[i, j] = int(act_buf[j])   # TODO use list comprehension instead of for loop              
-        self.border_table = border_table[border_table[:, 0].argsort()] # sort by id
+        self.border_table = border_table[np.lexsort((border_table[:, 1],border_table[:, 0]))] # sort by id and sub_id
 
     def load_surfaces(self, force = False):
         '''load all surfacess into memory (numpy array)
@@ -145,7 +149,7 @@ class DatFile():
             act_buf = act_line.split('*')
             for j in range(4):
                 surface_table[i, j] = int(act_buf[j])   # TODO use list comprehension instead of for loop              
-        self.surface_table = surface_table[surface_table[:, 0].argsort()] # sort by id
+        self.surface_table = surface_table[np.lexsort((surface_table[:, 1],surface_table[:, 0]))] # sort by id and sub_id
 
     def get_point(self, pid):
         """Get point coordinates by point id
@@ -171,10 +175,13 @@ if __name__ == "__main__":
         sys.exit(2)
     D_F.load_table_info()
     D_F.load_points()
+    print('point ids:')
     print(D_F.point_table.shape)
+    print(D_F.point_table[0:10,:])
 
     D_F.load_lines()
-    print(D_F.line_table[0:5,:]) # for test
+    print(D_F.line_table[0:10,:]) # for test
+    #print(D_F.line_table) # for test    TODO: no T_VONAL in the test.dat file
     print(D_F.line_table.shape)
 
     D_F.load_border_lines()
@@ -182,7 +189,7 @@ if __name__ == "__main__":
     print(D_F.border_line_table.shape)        
 
     D_F.load_borders()
-    print(D_F.border_table[2350:2360,:])  # for test +1 and -1 replacement     
+    print(D_F.border_table[2350:2360,:])  # for test +1 and -1 replacement
     print(D_F.border_table.shape)  
 
     D_F.load_surfaces()
