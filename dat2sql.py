@@ -196,9 +196,7 @@ class DatFile():
         selected_points[:-1] = selected_line[:,2]
         selected_points[-1] = selected_line[-1,3]
 
-        indexes = np.searchsorted(self.point_table[:,0], selected_points )
-
-        selected_points_crd = [tuple(self.get_point(i)) for i in indexes]
+        selected_points_crd = [tuple(self.get_point(i)) for i in selected_points]
 
         return selected_points_crd
 
