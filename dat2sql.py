@@ -196,15 +196,11 @@ class DatFile():
         selected_points[:-1] = selected_line[:,2]
         selected_points[-1] = selected_line[-1,3]
 
-        i = np.searchsorted(self.point_table[:,0], selected_points )
+        indexes = np.searchsorted(self.point_table[:,0], selected_points )
 
-        if 0 <= i.all() < self.point_table.shape[0] and self.point_table[i,0].all() == selected_points.all():
+        selected_points_crd = [tuple(self.get_point(i)) for i in indexes]
 
-            selected_points_crd = list(zip(self.point_table[i,1]/100, self.point_table[i,2]/100))
-
-            return selected_points_crd
-        
-        return None
+        return selected_points_crd
 
 
 
