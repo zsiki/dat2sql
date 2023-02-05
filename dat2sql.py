@@ -179,7 +179,7 @@ class DatFile():
 
         if 0 <= i < self.point_table.shape[0] and self.point_table[i,0] == pid:
 
-            return self.point_table[i][1]/100, self.point_table[i][2]/100
+            return self.point_table[i][2]/100, self.point_table[i][1]/100
 
         return None
     
