@@ -183,9 +183,10 @@ class DatFile():
 
         return None
     
-    def get_border_line(self, bid):
+    def get_border_line(self, bid, reverse=False):
         """Get border line's point coordinates by border line id
         :param bid: border line id (type: int)
+        :param reverse: reversing the direction of a line (type: bool)
         """
         selected_line = self.border_line_table[self.border_line_table[:,0] == bid]
 
@@ -198,8 +199,43 @@ class DatFile():
 
         selected_points_crd = [tuple(self.get_point(i)) for i in selected_points]
 
+        if reverse:
+            return selected_points_crd[::-1] #reverse
+            
         return selected_points_crd
 
+    def get_border(self, boid):
+        """
+        Retrieves the coordinates of a specified border by boid.
+        
+        Parameters:
+        boid (int): The border identifier.
+        
+        Returns:
+        selected_border_crd (list): A list of tuples representing the coordinates of the  border.
+        Returns None if the boid is not found.
+        """
+   
+        selected_border = self.border_table[self.border_table[:,0] == boid]
+
+
+        if selected_border.shape[0] == 0:
+            return None
+
+        selected_border_crd_lists = [ self.get_border_line(selected_border[i,2], True) if selected_border[i,3] == -1
+                                    else self.get_border_line(selected_border[i,2], False)
+                                    for i in range(selected_border.shape[0]) ]
+
+        selected_border_crd_list = sum(selected_border_crd_lists, []) #list of lists to a list of tuples
+
+        # removing neighboring duplicated coordinates
+        selected_border_crd = [selected_border_crd_list[0]]
+
+        for i, point_crd in enumerate(selected_border_crd_list[1:]):
+            if point_crd != selected_border_crd_list[i]:
+                selected_border_crd.append(point_crd)
+
+        return selected_border_crd
 
 
 
