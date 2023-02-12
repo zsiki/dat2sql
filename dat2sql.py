@@ -28,10 +28,10 @@ class DatFile():
     """
     def __init__(self, dat_file_name=None, table_file='T_OBJ_ATTR.json', encoding='cp1250'):
         """ initialize """
-        self.table_file = table_file
         self.dat_file_name = dat_file_name
 
         self.dat_file = None
+        self.tables_data = None
         try:
             self.dat_file = open(self.dat_file_name, 'r', encoding=encoding)
         except IOError:
@@ -41,7 +41,12 @@ class DatFile():
             # Raised when a Unicode-related encoding error occurs
             print("There was an error encrypting "+self.dat_file_name+\
                 " using "+encoding+" encoding")
-
+        
+        # Opening DAT1-M1 table's JSON file
+        with open( table_file, 'r', encoding='cp1250') as f_tables:
+            # returns JSON object as a dictionary
+            self.tables_data = json.load(f_tables)
+        
         # geometry tables
         self.point_table = None
         self.line_table = None
@@ -239,6 +244,31 @@ class DatFile():
 
         return selected_border_crd
 
+    def get_surface(self, sid):
+        """
+        Retrieves the coordinates of a specified surface by sid.
+
+        Parameters:
+        sid (int): The surface identifier.
+
+        Returns:
+        selected_surface_crd (list): A list of tuples representing the coordinates of the  border.
+        Returns None if the boid is not found.
+        """
+
+        pre_selected = self.surface_table[self.surface_table[:,0] == sid]
+
+        # exterior border to the first place
+        selected_surface = pre_selected[(-pre_selected[:, 3]).argsort()]
+
+
+        if selected_surface.shape[0] == 0:
+            return None
+
+        selected_surface_crd_lists = [self.get_border(selected_surface[i,2]) for i in range(selected_surface.shape[0])]
+
+        return selected_surface_crd_lists
+
     def create_tables(self, table_num='available'):
         """
         Retunrs a string with SQL create table commands.
@@ -256,30 +286,25 @@ class DatFile():
         Returns:
         sql_string (str): fomrated string with SQL commands
         """
-        # Opening JSON file
-        with open( self.table_file, 'r', encoding='cp1250') as f_tables:
-            # returns JSON object as a dictionary
-            data = json.load(f_tables)
-
         selected_tables = []
 
         if table_num == 'available':
-            for table_name in data.keys():
+            for table_name in self.tables_data.keys():
 
                 if table_name in self.table_info:
                     selected_tables.append(table_name)
 
         elif table_num == 'all':
-            selected_tables = data.keys()
+            selected_tables = self.tables_data.keys()
 
         sql_string = ''
         constrain_string = '' # to add constraints at the end of the SQL string
 
         for obj_attrxx in selected_tables:
 
-            fields = data[obj_attrxx].get('fields')
-            checks = data[obj_attrxx].get('checks')
-            constraints = data[obj_attrxx].get('constraints')
+            fields = self.tables_data[obj_attrxx].get('fields')
+            checks = self.tables_data[obj_attrxx].get('checks')
+            constraints = self.tables_data[obj_attrxx].get('constraints')
 
             sql_string += f'CREATE TABLE {obj_attrxx}(\n'
 
