@@ -268,6 +268,39 @@ class DatFile():
         selected_surface_crd_lists = [self.get_border(selected_surface[i,2]) for i in range(selected_surface.shape[0])]
 
         return selected_surface_crd_lists
+  
+    def get_geometry_str(self, element, geom_type):
+        """Create a postGIS EWKT string for geometry
+
+        Parameters:
+        element (list or tuple): coordinates of a point, line or polygon
+        geom_type (str): Type of the element's geometry [point, line, surface]
+
+        Returns:
+        geometry (str): EWKT geometry string
+        """
+        if geom_type == 'surface':
+            geometry = 'ST_geomfromEWKT(\'SRID=23700; POLYGON('
+            for i in range(len(element)):
+                geometry += '('
+                geometry += ", ".join([str(crds[0])+' '+str(crds[1]) for crds in element[i]])
+                geometry +=')'
+                if len(element)-1 > i:
+                    geometry += ','
+            geometry += ')\')'
+
+
+        elif geom_type == 'line':
+            geometry = 'ST_geomfromEWKT(\'SRID=23700; LINE('
+            geometry += ", ".join([str(crds[0])+' '+str(crds[1]) for crds in element])
+            geometry += ')\')'
+
+
+        elif geom_type == 'point':
+            geometry = 'ST_geomfromEWKT(\'SRID=23700; POINT('
+            geometry += f'{element[0]} {element[1]})\')'
+
+        return geometry
 
     def create_tables(self, table_num='available'):
         """
