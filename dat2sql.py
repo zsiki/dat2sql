@@ -20,13 +20,15 @@
 
 import sys
 import re
+import json
 import numpy as np
 
 class DatFile():
     """
     """
-    def __init__(self, dat_file_name=None, encoding='cp1250'):
+    def __init__(self, dat_file_name=None, table_file='T_OBJ_ATTR.json', encoding='cp1250'):
         """ initialize """
+        self.table_file = table_file
         self.dat_file_name = dat_file_name
 
         self.dat_file = None
@@ -237,6 +239,69 @@ class DatFile():
 
         return selected_border_crd
 
+    def create_tables(self, table_num='available'):
+        """
+        Retunrs a string with SQL create table commands.
+
+        Filed names are defined in table_file according to DAT1-M1.
+        Edit the table_file for additional checks and constraints.
+
+        Default tabe_file name: T_OBJ_ATTR.json
+
+        Parameters:
+        table_num (str): tables to be created
+                        - all: every table in table_file (A-B-C object tables)
+                        - available: tables given in DAT file
+
+        Returns:
+        sql_string (str): fomrated string with SQL commands
+        """
+        # Opening JSON file
+        with open( self.table_file, 'r', encoding='cp1250') as f_tables:
+            # returns JSON object as a dictionary
+            data = json.load(f_tables)
+
+        selected_tables = []
+
+        if table_num == 'available':
+            for table_name in data.keys():
+
+                if table_name in self.table_info:
+                    selected_tables.append(table_name)
+
+        elif table_num == 'all':
+            selected_tables = data.keys()
+
+        sql_string = ''
+        constrain_string = '' # to add constraints at the end of the SQL string
+
+        for obj_attrxx in selected_tables:
+
+            fields = data[obj_attrxx].get('fields')
+            checks = data[obj_attrxx].get('checks')
+            constraints = data[obj_attrxx].get('constraints')
+
+            sql_string += f'CREATE TABLE {obj_attrxx}(\n'
+
+            for field in fields.keys():
+                sql_string += f'\t{field} {fields[field]},\n'
+
+            sql_string += '\n'
+
+            if checks:
+                for check in checks.keys():
+                    sql_string += f'\t{checks[check]}\n'
+
+            sql_string += ');\n\n'
+
+            if constraints:
+                for constraint in constraints:
+                    if constraint in selected_tables: #check if FK table created
+                        constrain_string += f'{constraints[constraint]};\n'
+
+        sql_string += constrain_string
+
+        return sql_string
 
 
 
@@ -272,4 +337,4 @@ if __name__ == "__main__":
     print(D_F.surface_table[110:116,:])  # for test +1 and -1 replacement     
     print(D_F.surface_table.shape)
 
-    print(D_F.get_border_line(2)) # for test
+    print(D_F.create_tables()) # for test
