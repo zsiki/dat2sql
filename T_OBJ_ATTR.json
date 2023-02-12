@@ -1,0 +1,588 @@
+{
+    "T_OBJ_ATTRAA": {
+        "fields": {
+            "alappont_id": "INT",
+            "obj_fels": "VARCHAR(4)",
+            "pont_szam": "VARCHAR(20)",
+            "pont_id": "geometry(POINT, 23700)",
+            "vizsz_alland1": "INT",
+            "pontvedo": "INT",
+            "vizsz_alland2": "INT",
+            "v_mag2": "INT",
+            "vizsz_alland3": "INT",
+            "v_mag3": "INT",
+            "meghat_mod": "INT",
+            "szemely_id": "INT",
+            "all_datum": "VARCHAR(8)",
+            "elozo_alappont_id": "INT",
+            "blokk_id": "INT",
+            "end_time": "TIMESTAMP",
+            "tar_hely": "VARCHAR(50)",
+            "digit_hely": "VARCHAR(50)",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        }
+
+    },
+        
+    "T_OBJ_ATTRAB": {
+        "fields": {
+            "malapp_id": "INT",
+            "obj_fels": "VARCHAR(4)",
+            "mpont_szam": "VARCHAR(20)",
+            "pont_id": "geometry(POINT, 23700)",
+            "mag_alland": "INT",
+            "mag_allandfa": "INT",
+            "mag": "INT",
+            "meghat_mod": "INT",
+            "szemely_id": "INT",
+            "all_datum": "VARCHAR(8)",
+            "elozo_malapp_id": "INT",
+            "blokk_id": "INT",
+            "end_time": "TIMESTAMP",
+            "tar_hely": "VARCHAR(50)",
+            "digit_hely": "VARCHAR(50)",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        }
+
+    },
+
+    "T_OBJ_ATTRAC": {
+
+        "fields": {
+            "rpont_id": "INT PRIMARY KEY",
+            "obj_fels": "VARCHAR(4)",
+            "pont_szam": "VARCHAR(20)",
+            "point_id": "geometry(Point, 23700)",
+            "reszlet_alland": "INT",
+            "meghat_mod": "INT",
+            "meghat_datum": "TIMESTAMP",
+            "elozo_rpont_id": "INT",
+            "end_time": "TIMESTAMP",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "pontkod": "VARCHAR(20)",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        }
+        
+    },
+
+    "T_OBJ_ATTRAD": {
+        "fields": {
+            "cimkoord_id": "INT PRIMARY KEY",
+            "obj_fels": "VARCHAR(4)",
+            "pont_szam": "VARCHAR(20)",
+            "pontkod": "VARCHAR(20)",
+            "point_id": "geometry(Point, 23700)",
+            "end_time": "TIMESTAMP",
+            "jelkulcs": "INT",
+            "leiras": "VARCHAR(200)",
+            "parcel_id1": "INT",
+            "parcel_id2": "INT",
+            "ep_id": "INT",
+            "eoi_id": "INT",
+            "elozo_cimkoord": "INT",
+            "munkater_id": "INT",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        },
+
+        "constraints": {
+            "T_OBJ_ATTRBC": "ALTER TABLE T_OBJ_ATTRAD ADD CONSTRAINT FK_ATTRAD_ATTRBC FOREIGN KEY (parcel_id1) REFERENCES T_OBJ_ATTRBC (parcel_id)",
+            "T_OBJ_ATTRBD": "ALTER TABLE T_OBJ_ATTRAD ADD CONSTRAINT FK_ATTRAD_ATTRBD FOREIGN KEY (parcel_id2) REFERENCES T_OBJ_ATTRBD (parcel_id)",
+            "T_OBJ_ATTRCA": "ALTER TABLE T_OBJ_ATTRAD ADD CONSTRAINT FK_ATTRAD_ATTRCA FOREIGN KEY (ep_id) REFERENCES T_OBJ_ATTRCA (ep_id)"
+        }
+
+    },
+
+    "T_OBJ_ATTRBA": {
+        "fields": {
+            "kozig_idba": "INT",
+            "obj_fels": "VARCHAR(4)",
+            "felulet_id": "geometry(POLYGON,23700)",
+            "kozig_id": "INT",
+            "kozig_kp": "INT",
+            "ceg_id": "INT",
+            "elhat_jell": "INT",
+            "elhat_mod": "INT",
+            "nemz_nev1": "VARCHAR(20)",
+            "nemz_nev2": "VARCHAR(20)",
+            "elozo_kozig_id": "INT",
+            "blokk_id1": "INT",
+            "blokk_id2": "INT",
+            "end_time": "TIMESTAMP",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "pont_id": "geometry(POINT, 23700)",
+            "becsl_jaras": "INT",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        }
+
+    },
+        
+    "T_OBJ_ATTRBB": {
+        "fields": {
+            "kozigal_id": "INT",
+            "obj_fels": "VARCHAR(4)",
+            "felulet_id": "geometry(POLYGON,23700)",
+            "kozigal_nev": "VARCHAR(20)",
+            "kozig_id": "INT",
+            "l_datum": "VARCHAR(8)",
+            "hatarozat": "VARCHAR(20)",
+            "elhat_jell": "INT",
+            "elhat_mod": "INT",
+            "elozo_kozigal_id": "INT",
+            "blokk_id1": "INT",
+            "blokk_id2": "INT",
+            "end_time": "TIMESTAMP",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "pont_id": "geometry(POINT, 23700)",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        }
+
+    },
+
+    "T_OBJ_ATTRBC": {
+
+        "fields": {
+            "parcel_id": "INT PRIMARY KEY",
+            "obj_fels": "VARCHAR(4)",
+            "felulet_id":  "geometry(POLYGON, 23700)",
+            "helyr_szam": "VARCHAR(15)",
+            "cim_id": "INT",
+            "fekves": "INT",
+            "kozter_jell": "INT",
+            "terulet": "INT",
+            "foldert": "INT",
+            "forg_ertek": "INT",
+            "val_nem": "VARCHAR(3)",
+            "szerv_tip": "INT",
+            "jogi_jelleg": "INT",
+            "jogallas": "INT",
+            "ceg_id": "INT",
+            "elhat_jell": "INT",
+            "elhat_mod": "INT",
+            "elozo_parcel_id": "INT",
+            "l_datum": "TIMESTAMP",
+            "hatarozat": "VARCHAR",
+            "valt_jell": "VARCHAR",
+            "tar_hely": "VARCHAR",
+            "blokk_id": "INT",
+            "end_time": "TIMESTAMP",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "pont_id": "geometry(Point, 23700)",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        }
+
+    },
+
+    "T_OBJ_ATTRBD": {
+
+        "fields": {
+            "parcel_id": "INT PRIMARY KEY",
+            "obj_fels": "VARCHAR(4)",
+            "felulet_id":  "geometry(POLYGON, 23700)",
+            "helyr_szam": "VARCHAR(15)",
+            "cim_id": "INT",
+            "fekves": "INT",
+            "terulet": "INT",
+            "foldert": "INT",
+            "forg_ertek": "INT",
+            "val_nem": "VARCHAR(3)",
+            "szerv_tip": "INT",
+            "jogi_jelleg": "INT",
+            "jogallas": "INT",
+            "szemely_id": "INT",
+            "ceg_id": "INT",
+            "elhat_jell": "INT",
+            "elhat_mod": "INT",
+            "elozo_parcel_id": "INT",
+            "l_datum": "TIMESTAMP",
+            "hatarozat": "VARCHAR",
+            "valt_jell": "VARCHAR",
+            "tar_hely": "VARCHAR",
+            "blokk_id": "INT",
+            "end_time": "TIMESTAMP",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "pont_id": "geometry(Point, 23700)",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        }
+
+    },
+
+    "T_OBJ_ATTRBE": {
+        "fields": {
+            "alreszlet_id": "INT",
+            "obj_fels": "VARCHAR(4)",
+            "felulet_id": "geometry(POLYGON,23700)",
+            "alator": "VARCHAR(3)",
+            "helyr_szam": "VARCHAR(15)",
+            "terulet": "INT",
+            "foldert": "INT",
+            "muvel_ag": "INT",
+            "elhat_jell": "INT",
+            "elhat_mod": "INT",
+            "elozo_alreszlet_id": "INT",
+            "hatarozat": "VARCHAR(20)",
+            "valt_jell": "VARCHAR(20)",
+            "tar_cim": "VARCHAR(20)",
+            "end_time": "TIMESTAMP",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "pont_id": "geometry(POINT, 23700)",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        }
+
+    },
+       
+    "T_OBJ_ATTRBF": {
+        "fields":{
+            "moszt_id": "INT PRIMARY KEY",
+            "obj_fels": "VARCHAR(4)",
+            "felulet_id": "geometry(POLYGON,23700)",
+            "minoseg_oszt": "INT",
+            "muvel_ag": "INT",
+            "elhat_jell": "INT",
+            "elhat_mod": "INT",
+            "elozo_moszt_id": "INT",
+            "end_time": "TIMESTAMP",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "pont_id": "geometry(Point, 23700)",
+            "helyr_szam": "VARCHAR(15)",
+            "parcel_id1": "INT",
+            "parcel_id2": "INT",
+            "terulet": "INT",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        },
+
+        "constraints": {
+           "T_OBJ_ATTRBC": "ALTER TABLE T_OBJ_ATTRBF ADD CONSTRAINT FK_ATTRBF_ATTRBC FOREIGN KEY (parcel_id1) REFERENCES T_OBJ_ATTRBC (parcel_id) ON DELETE SET NULL",
+           "T_OBJ_ATTRBD": "ALTER TABLE T_OBJ_ATTRBF ADD CONSTRAINT FK_ATTRBF_ATTRBD FOREIGN KEY (parcel_id2) REFERENCES T_OBJ_ATTRBD (parcel_id) ON DELETE SET NULL"        
+        }
+
+    },
+
+    "T_OBJ_ATTRBG": {
+        "fields": {
+            "eoi_id": "INT",
+            "obj_fels": "VARCHAR(4)",
+            "felulet_id": "geometry(POLYGON,23700)",
+            "alator_eoi": "VARCHAR(10)",
+            "helyr_szam": "VARCHAR(15)",
+            "cim_id": "INT",
+            "kozter_jell": "INT",
+            "terulet": "INT",
+            "forg_ertek": "INT",
+            "valuta": "VARCHAR(3)",
+            "szerv_tip": "INT",
+            "jogi_jelleg": "INT",
+            "jogallas": "INT",
+            "eoi_helyiseg": "INT",
+            "eoi_tulform": "INT",
+            "szemely_id": "INT",
+            "ceg_id": "INT",
+            "elhat_jell": "INT",
+            "elhat_mod": "INT",
+            "elozo_eoi_id": "INT",
+            "l_datum": "VARCHAR(8)",
+            "hatarozat": "VARCHAR(20)",
+            "valt_jell": "VARCHAR(20)",
+            "tar_hely": "VARCHAR(20)",
+            "end_time": "TIMESTAMP",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "pont_id": "geometry(POINT, 23700)",
+            "parcel_id1": "INT",
+            "parcel_id2": "INT",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        },
+
+        "constraints": {
+            "T_OBJ_ATTRBC": "ALTER TABLE T_OBJ_ATTRBG ADD CONSTRAINT FK_ATTRBG_ATTRBC FOREIGN KEY (parcel_id1) REFERENCES T_OBJ_ATTRBC (parcel_id)",
+            "T_OBJ_ATTRBD": "ALTER TABLE T_OBJ_ATTRBG ADD CONSTRAINT FK_ATTRBG_ATTRBD FOREIGN KEY (parcel_id2) REFERENCES T_OBJ_ATTRBD (parcel_id)"
+        }
+
+    },
+    
+    "T_OBJ_ATTRBH": {
+        "fields": {
+            "szolg_id": "INT",
+            "obj_fels": "VARCHAR(4)",
+            "obj_kiterj": "INT",
+            "geo_ae_id": "geometry",
+            "parcel_id1": "INT",
+            "parcel_id2": "INT",
+            "terulet": "INT",
+            "elozo_szolg_id": "INT",
+            "l_datum": "VARCHAR(8)",
+            "hatarozat": "VARCHAR(20)",
+            "end_time": "TIMESTAMP",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "pont_id": "geometry(POINT, 23700)",
+            "megjegyzes": "VARCHAR(8)",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        },
+
+        "constraints": {
+            "T_OBJ_ATTRBC": "ALTER TABLE T_OBJ_ATTRBH ADD CONSTRAINT FK_ATTRBH_ATTRBC FOREIGN KEY (parcel_id1) REFERENCES T_OBJ_ATTRBC (parcel_id)",
+            "T_OBJ_ATTRBD": "ALTER TABLE T_OBJ_ATTRBH ADD CONSTRAINT FK_ATTRBH_ATTRBD FOREIGN KEY (parcel_id2) REFERENCES T_OBJ_ATTRBD (parcel_id)"
+        }
+
+    },
+        
+    "T_OBJ_ATTRBI": {
+        "fields": {
+            "mintater_id": "INT",
+            "obj_fels": "VARCHAR(4)",
+            "obj_kiterj": "INT",
+            "geo_ae_id": "geometry",
+            "jelleg": "INT",
+            "helyszin_labor": "VARCHAR(500)",
+            "parcel_id1": "INT",
+            "parcel_id2": "INT",
+            "helyr_szam": "VARCHAR(15)",
+            "elozo_mintater_id": "INT",
+            "minoseg_oszt": "INT",
+            "muvel_ag": "INT",
+            "mt_melyseg": "VARCHAR(15)",
+            "mt_feltalaj": "VARCHAR(200)",
+            "mt_altalaj": "VARCHAR(200)",
+            "mt_tulajdonsag": "VARCHAR(500)",
+            "end_time": "TIMESTAMP",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "megjegyzes": "VARCHAR(200)",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        },
+
+        "constraints": {
+            "T_OBJ_ATTRBC": "ALTER TABLE T_OBJ_ATTRBI ADD CONSTRAINT FK_ATTRBI_ATTRBC FOREIGN KEY (parcel_id1) REFERENCES T_OBJ_ATTRBC (parcel_id)",
+            "T_OBJ_ATTRBD": "ALTER TABLE T_OBJ_ATTRBI ADD CONSTRAINT FK_ATTRBI_ATTRBD FOREIGN KEY (parcel_id2) REFERENCES T_OBJ_ATTRBD (parcel_id)"
+        }
+
+    },
+
+    "T_OBJ_ATTRCA":{
+
+        "fields": {
+            "ep_id": "INT PRIMARY KEY",
+            "obj_fels": "VARCHAR(4)",
+            "felulet_id": "geometry(POLYGON,23700)",
+            "cim_id": "INT",
+            "parcel_id1": "INT",
+            "parcel_id2": "INT",
+            "ep_sorsz": "INT",
+            "szintek": "INT",
+            "fugg_kiter": "INT",
+            "anyag": "INT",
+            "epulet_tip": "INT",
+            "epulet_alt": "INT",
+            "szemely_id": "INT",
+            "ceg_id": "INT",
+            "elozo_ep_id": "INT",
+            "blokk_id": "INT",
+            "end_time": "TIMESTAMP",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "pont_id": "geometry(Point, 23700)",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        },
+
+        "constraints": {
+            "T_OBJ_ATTRBC": "ALTER TABLE T_OBJ_ATTRCA ADD CONSTRAINT FK_ATTRCA_ATTRBC FOREIGN KEY (parcel_id1) REFERENCES T_OBJ_ATTRBC (parcel_id)",
+            "T_OBJ_ATTRBD": "ALTER TABLE T_OBJ_ATTRCA ADD CONSTRAINT FK_ATTRCA_ATTRBD FOREIGN KEY (parcel_id2) REFERENCES T_OBJ_ATTRBD (parcel_id)"
+        }
+
+    },
+
+    "T_OBJ_ATTRCB":{
+
+        "fields": {
+            "eptart_id": "INT PRIMARY KEY",
+            "obj_fels": "VARCHAR(4)",
+            "obj_kiterj":"INT",
+            "geo_ae_id": "geometry",
+            "ep_id": "INT",
+            "fugg_kiter": "INT",
+            "anyag": "INT",
+            "elozo_eptart_id": "INT",
+            "end_time": "TIMESTAMP",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "pont_id": "geometry(Point, 23700)",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        },
+        "constraints": {
+            "T_OBJ_ATTRCA": "ALTER TABLE T_OBJ_ATTRCB ADD CONSTRAINT FK_ATTRCB_ATTRCA FOREIGN KEY (ep_id) REFERENCES T_OBJ_ATTRCA (ep_id)"
+        }
+
+    },
+        
+    "T_OBJ_ATTRCC": {
+        "fields": {
+            "kerit_id": "INT",
+            "obj_fels": "VARCHAR(4)",
+            "obj_kiterj": "INT",
+            "geo_ae_id": "geometry",
+            "helyr_szam": "VARCHAR(15)",
+            "parcel_id1": "INT",
+            "parcel_id2": "INT",
+            "fugg_kiter": "INT",
+            "anyag": "INT",
+            "szemely_id": "INT",
+            "ceg_id": "INT",
+            "elozo_kerit_id": "INT",
+            "end_time": "TIMESTAMP",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "pont_id": "geometry(POINT, 23700)",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        },
+
+        "constraints": {
+            "T_OBJ_ATTRBC": "ALTER TABLE T_OBJ_ATTRCC ADD CONSTRAINT FK_ATTRCC_ATTRBC FOREIGN KEY (parcel_id1) REFERENCES T_OBJ_ATTRBC (parcel_id)",
+            "T_OBJ_ATTRBD": "ALTER TABLE T_OBJ_ATTRCC ADD CONSTRAINT FK_ATTRCC_ATTRBD FOREIGN KEY (parcel_id2) REFERENCES T_OBJ_ATTRBD (parcel_id)"
+        }
+
+    },
+        
+    "T_OBJ_ATTRCD": {
+        "fields": {
+            "terep_id": "INT",
+            "obj_fels": "VARCHAR(4)",
+            "obj_kiterj": "INT",
+            "geo_ae_id": "geometry",
+            "helyr_szam": "VARCHAR(15)",
+            "parcel_id1": "INT",
+            "parcel_id2": "INT",
+            "fugg_kiter": "INT",
+            "anyag": "INT",
+            "szemely_id1": "INT",
+            "ceg_id1": "INT",
+            "szemely_id2": "INT",
+            "ceg_id2": "INT",
+            "elozo_terep_id": "INT",
+            "blokk_id": "INT",
+            "end_time": "TIMESTAMP",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "pont_id": "geometry(POINT, 23700)",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        },
+
+        "constraints": {
+            "T_OBJ_ATTRBC": "ALTER TABLE T_OBJ_ATTRCD ADD CONSTRAINT FK_ATTRCD_ATTRBC FOREIGN KEY (parcel_id1) REFERENCES T_OBJ_ATTRBC (parcel_id)",
+            "T_OBJ_ATTRBD": "ALTER TABLE T_OBJ_ATTRCD ADD CONSTRAINT FK_ATTRCD_ATTRBD FOREIGN KEY (parcel_id2) REFERENCES T_OBJ_ATTRBD (parcel_id)"
+        }
+
+    },
+        
+    "T_OBJ_ATTRCE": {
+        "fields": {
+            "szobor_id": "INT",
+            "obj_fels": "VARCHAR(4)",
+            "obj_kiterj": "INT",
+            "geo_ae_id": "geometry",
+            "helyr_szam": "VARCHAR(15)",
+            "parcel_id1": "INT",
+            "parcel_id2": "INT",
+            "kozter_nev": "INT",
+            "fugg_kiter": "INT",
+            "anyag": "INT",
+            "ceg_id1": "INT",
+            "ceg_id2": "INT",
+            "elozo_szobor_id": "INT",
+            "blokk_id": "INT",
+            "end_time": "TIMESTAMP",
+            "jelkulcs": "INT",
+            "munkater_id": "INT",
+            "pont_id": "geometry(POINT, 23700)",
+            "start_time": "TIMESTAMP"
+        },
+
+        "checks": {
+            "check_1": "CHECK ((start_time IS NULL AND end_time IS NOT NULL) OR (start_time IS NOT NULL AND end_time IS NULL) OR (start_time < end_time))"
+        },
+
+        "constraints": {
+            "T_OBJ_ATTRBC": "ALTER TABLE T_OBJ_ATTRCE ADD CONSTRAINT FK_ATTRCE_ATTRBC FOREIGN KEY (parcel_id1) REFERENCES T_OBJ_ATTRBC (parcel_id)",
+            "T_OBJ_ATTRBD": "ALTER TABLE T_OBJ_ATTRCE ADD CONSTRAINT FK_ATTRCE_ATTRBD FOREIGN KEY (parcel_id2) REFERENCES T_OBJ_ATTRBD (parcel_id)"
+        }
+
+    }
+}
